@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_home/widgets/smart_device_box_widget.dart';
+import 'package:smart_home/widgets/smart_area_box_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -113,9 +113,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2, childAspectRatio: 1 / 1.1),
                 itemBuilder: (context, index) {
-                  return SmartDeviceBoxWidget(
-                      areaName: mySmartDevices[index][0],
-                      noDevices: mySmartDevices[index][1]);
+                  return SmartAreaBoxWidget(
+                    areaId: index,
+                    areaName: mySmartDevices[index][0],
+                    noDevices: mySmartDevices[index][1],
+                  );
                 },
               )),
             ],
