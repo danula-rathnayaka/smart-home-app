@@ -145,9 +145,7 @@ class _ShowAreaDevicesScreenState extends State<ShowAreaDevicesScreen> {
                     ),
                     Text(
                       "${mySmartDevices[widget.areaId][1]} device${mySmartDevices[widget.areaId][1] == 1 ? '' : 's'}",
-                      style: TextStyle(
-                          fontSize: 25,
-                          color: Colors.grey[200]),
+                      style: TextStyle(fontSize: 25, color: Colors.grey[200]),
                     )
                   ],
                 ),
@@ -163,12 +161,13 @@ class _ShowAreaDevicesScreenState extends State<ShowAreaDevicesScreen> {
                       padding: const EdgeInsets.all(5),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 1, childAspectRatio: 1 / 0.3),
+                              crossAxisCount: 1, childAspectRatio: 1 / 0.35),
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: SmartDeviceBoxWidget(
-                              deviceData: mySmartDevices[widget.areaId][2][index],
+                              deviceData: mySmartDevices[widget.areaId][2]
+                                  [index],
                               toggleSwitch: (value) => setState(() {
                                     mySmartDevices[widget.areaId][2][index][1] =
                                         value;
