@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class FrostedGlassBox extends StatelessWidget {
-  const FrostedGlassBox({super.key, this.child});
+  const FrostedGlassBox(
+      {super.key, required this.child, this.isSmartDeviceActive = false});
 
-  final child;
+  final bool isSmartDeviceActive;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +31,15 @@ class FrostedGlassBox extends StatelessWidget {
                   gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withOpacity(0.005),
-                        Colors.white.withOpacity(0.03)
-                      ])),
+                      colors: isSmartDeviceActive
+                          ? [
+                              const Color(0xFF231877).withOpacity(0.4),
+                              const Color(0xFF231877).withOpacity(0.2)
+                            ]
+                          : [
+                              Colors.white.withOpacity(0.005),
+                              Colors.white.withOpacity(0.03)
+                            ])),
             ),
 
             // Child
