@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_home/widgets/smart_device_box_widget.dart';
 
@@ -12,6 +13,15 @@ class ShowAreaDevicesScreen extends StatefulWidget {
 
 class _ShowAreaDevicesScreenState extends State<ShowAreaDevicesScreen> {
   static const horizontalPadding = 35.0;
+
+  late DatabaseReference db;
+
+  @override
+  void initState() {
+    super.initState();
+
+    db = FirebaseDatabase.instance.ref().child("area");
+  }
 
   List mySmartDevices = [
     [
@@ -109,6 +119,28 @@ class _ShowAreaDevicesScreenState extends State<ShowAreaDevicesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              ElevatedButton(
+                  onPressed: () {
+                    // List<Map<String, dynamic>> data = mySmartDevices.map((roomData) {
+                    //   String roomName = roomData[0];
+                    //   List<List<dynamic>> devices = roomData[2];
+                    //
+                    //   Map<String, dynamic> roomMap = {
+                    //     'roomName': roomName,
+                    //     'devices': Map.fromIterable(
+                    //       devices,
+                    //       key: (device) => device[0], // Use device name as key
+                    //       value: (device) => device[1], // Use status as value
+                    //     ),
+                    //   };
+                    //
+                    //   return roomMap;
+                    // }).toList();
+                    //
+                    // db.push().set(data);
+                    // print(data);
+                  },
+                  child: Text("Click Me")),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
