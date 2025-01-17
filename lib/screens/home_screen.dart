@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_home/widgets/smart_area_box_widget.dart';
 
@@ -12,17 +13,14 @@ class _HomeScreenState extends State<HomeScreen> {
   // Padding constants
   static const horizontalPadding = 35.0;
 
-  // List of Smart Devices
-  List mySmartDevices = [
-    ["Living Room", 4],
-    ["Bed Room", 2],
-    ["Kitchen", 3],
-    ["Bath Room", 1],
-    ["Office", 5],
-    ["Garage", 2],
-    ["Dining Room", 4],
-    ["Roof Top", 1]
-  ];
+  late DatabaseReference _database;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _database = FirebaseDatabase.instance.ref().child("area");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,14 +88,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: 40,
               ),
 
-              // Smart Devices Grid
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: Text(
-                    "My Devices (${mySmartDevices.length})",
+                    "My Devices",
                     style: TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 18,
@@ -106,20 +103,52 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
-              Expanded(
-                  child: GridView.builder(
-                itemCount: mySmartDevices.length,
-                padding: const EdgeInsets.all(10),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, childAspectRatio: 1 / 1.1),
-                itemBuilder: (context, index) {
-                  return SmartAreaBoxWidget(
-                    areaId: index,
-                    areaName: mySmartDevices[index][0],
-                    noDevices: mySmartDevices[index][1],
-                  );
+              StreamBuilder(
+                stream: _database.onValue,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Something went wrong');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text("Loading");
+                  }
+
+                  if (!snapshot.hasData) {
+                    return Text('No data available');
+                  }
+
+                  Map<dynamic, dynamic> data =
+                      snapshot.data!.snapshot.value as Map;
+
+                  List<List<dynamic>> roomData = [];
+
+                  data.forEach((key, value) {
+                    if (value is Map &&
+                        value.containsKey('roomName') &&
+                        value.containsKey('devices')) {
+                      roomData.add(
+                          [key, value['roomName'], value['devices'].keys.length]);
+                    }
+                  });
+
+                  return Expanded(
+                      child: GridView.builder(
+                    itemCount: roomData.length,
+                    padding: const EdgeInsets.all(10),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, childAspectRatio: 1 / 1.1),
+                    itemBuilder: (context, index) {
+                      return SmartAreaBoxWidget(
+                        areaId: roomData[index][0],
+                        areaName: roomData[index][1],
+                        noDevices: roomData[index][2],
+                      );
+                    },
+                  ));
                 },
-              )),
+              )
             ],
           ),
         ),

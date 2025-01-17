@@ -6,7 +6,7 @@ class SmartAreaBoxWidget extends StatelessWidget {
   const SmartAreaBoxWidget(
       {super.key,  required this.areaId, required this.areaName, required this.noDevices});
 
-  final int areaId;
+  final dynamic areaId;
   final String areaName;
   final int noDevices;
 
